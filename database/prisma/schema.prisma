@@ -1,0 +1,94 @@
+// use prisma-next
+model Society {
+  id        String                     @id @default(uuid())
+  name      String
+  address   String?
+  createdAt TimestamptzString          @default(now())
+  updatedAt temporal.updatedAtString()
+
+  wings     Wing[]
+  users     User[]
+  staff     Staff[]
+}
+
+model Wing {
+  id        String                     @id @default(uuid())
+  name      String
+  societyId String
+
+  society   Society                    @relation(fields:[societyId], references:[id])
+  flats     Flat[]
+
+  createdAt TimestamptzString          @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([societyId, name])
+}
+
+model Flat {
+  id        String                     @id @default(uuid())
+  number    String
+  wingId    String
+
+  wing      Wing                       @relation(fields:[wingId], references:[id])
+  residents Resident[]
+
+  createdAt TimestamptzString          @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([wingId, number])
+}
+
+model User {
+  id           String                     @id @default(uuid())
+  email        String                     @unique
+  passwordHash String
+  role         UserRole
+  societyId    String
+
+  society      Society                    @relation(fields:[societyId], references:[id])
+  resident     Resident?
+  staff        Staff?
+
+  createdAt    TimestamptzString          @default(now())
+  updatedAt    temporal.updatedAtString()
+}
+
+model Resident {
+  id        String                     @id @default(uuid())
+  userId    String                     @unique
+  flatId    String
+
+  user      User                       @relation(fields:[userId], references:[id])
+  flat      Flat                       @relation(fields:[flatId], references:[id])
+
+  firstName String
+  lastName  String
+  phone     String?
+
+  createdAt TimestamptzString          @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Staff {
+  id          String                     @id @default(uuid())
+  userId      String                     @unique
+  societyId   String
+
+  user        User                       @relation(fields:[userId], references:[id])
+  society     Society                    @relation(fields:[societyId], references:[id])
+
+  firstName   String
+  lastName    String
+  phone       String?
+  designation String
+
+  createdAt   TimestamptzString          @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+enum UserRole {
+  RESIDENT
+  STAFF
+  COMMITTEE
+}

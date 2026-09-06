@@ -1,0 +1,952 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.flat",
+    "label": "Create table \"flat\"",
+    "summary": "Creates table \"flat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "flat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"flat\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"flat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"flat\"",
+        "sql": "CREATE TABLE \"public\".\"flat\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"number\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"wingId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"flat\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"flat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.resident",
+    "label": "Create table \"resident\"",
+    "summary": "Creates table \"resident\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "resident"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"resident\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"resident\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"resident\"",
+        "sql": "CREATE TABLE \"public\".\"resident\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"firstName\" text NOT NULL,\n  \"flatId\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"lastName\" text NOT NULL,\n  \"phone\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"resident\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"resident\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.society",
+    "label": "Create table \"society\"",
+    "summary": "Creates table \"society\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "society"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"society\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"society\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"society\"",
+        "sql": "CREATE TABLE \"public\".\"society\" (\n  \"address\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"society\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"society\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.staff",
+    "label": "Create table \"staff\"",
+    "summary": "Creates table \"staff\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "staff"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"staff\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"staff\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"staff\"",
+        "sql": "CREATE TABLE \"public\".\"staff\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"designation\" text NOT NULL,\n  \"firstName\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"lastName\" text NOT NULL,\n  \"phone\" text,\n  \"societyId\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"staff\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"staff\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"passwordHash\" text NOT NULL,\n  \"role\" text NOT NULL,\n  \"societyId\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"user_role_check_c16846c8\" CHECK (\"role\" IN ('RESIDENT', 'STAFF', 'COMMITTEE'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.wing",
+    "label": "Create table \"wing\"",
+    "summary": "Creates table \"wing\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "wing"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"wing\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wing\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"wing\"",
+        "sql": "CREATE TABLE \"public\".\"wing\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"societyId\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"wing\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wing\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.flat.flat_wingId_number_key",
+    "label": "Add unique constraint on \"flat\" (wingId, number)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "flat_wingId_number_key",
+        "table": "flat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"flat_wingId_number_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "flat_wingId_number_key",
+          "public",
+          "\"public\".\"flat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"flat_wingId_number_key\"",
+        "sql": "ALTER TABLE \"public\".\"flat\" ADD CONSTRAINT \"flat_wingId_number_key\" UNIQUE (\"wingId\", \"number\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"flat_wingId_number_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "flat_wingId_number_key",
+          "public",
+          "\"public\".\"flat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.resident.resident_userId_key",
+    "label": "Add unique constraint on \"resident\" (userId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "resident_userId_key",
+        "table": "resident"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"resident_userId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_userId_key",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"resident_userId_key\"",
+        "sql": "ALTER TABLE \"public\".\"resident\" ADD CONSTRAINT \"resident_userId_key\" UNIQUE (\"userId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"resident_userId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_userId_key",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.staff.staff_userId_key",
+    "label": "Add unique constraint on \"staff\" (userId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "staff_userId_key",
+        "table": "staff"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"staff_userId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_userId_key",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"staff_userId_key\"",
+        "sql": "ALTER TABLE \"public\".\"staff\" ADD CONSTRAINT \"staff_userId_key\" UNIQUE (\"userId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"staff_userId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_userId_key",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_email_key",
+    "label": "Add unique constraint on \"user\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_email_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.wing.wing_societyId_name_key",
+    "label": "Add unique constraint on \"wing\" (societyId, name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "wing_societyId_name_key",
+        "table": "wing"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"wing_societyId_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wing_societyId_name_key",
+          "public",
+          "\"public\".\"wing\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"wing_societyId_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"wing\" ADD CONSTRAINT \"wing_societyId_name_key\" UNIQUE (\"societyId\", \"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"wing_societyId_name_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wing_societyId_name_key",
+          "public",
+          "\"public\".\"wing\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.flat.flat_wingId_idx_68467838",
+    "label": "Create index \"flat_wingId_idx_68467838\" on \"flat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "flat_wingId_idx_68467838",
+        "table": "flat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"flat_wingId_idx_68467838\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"flat_wingId_idx_68467838\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"flat_wingId_idx_68467838\"",
+        "sql": "CREATE INDEX \"flat_wingId_idx_68467838\" ON \"public\".\"flat\" (\"wingId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"flat_wingId_idx_68467838\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"flat_wingId_idx_68467838\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.resident.resident_flatId_idx_3c68dca1",
+    "label": "Create index \"resident_flatId_idx_3c68dca1\" on \"resident\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "resident_flatId_idx_3c68dca1",
+        "table": "resident"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"resident_flatId_idx_3c68dca1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"resident_flatId_idx_3c68dca1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"resident_flatId_idx_3c68dca1\"",
+        "sql": "CREATE INDEX \"resident_flatId_idx_3c68dca1\" ON \"public\".\"resident\" (\"flatId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"resident_flatId_idx_3c68dca1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"resident_flatId_idx_3c68dca1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.staff.staff_societyId_idx_51f00e62",
+    "label": "Create index \"staff_societyId_idx_51f00e62\" on \"staff\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "staff_societyId_idx_51f00e62",
+        "table": "staff"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"staff_societyId_idx_51f00e62\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"staff_societyId_idx_51f00e62\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"staff_societyId_idx_51f00e62\"",
+        "sql": "CREATE INDEX \"staff_societyId_idx_51f00e62\" ON \"public\".\"staff\" (\"societyId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"staff_societyId_idx_51f00e62\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"staff_societyId_idx_51f00e62\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.user.user_societyId_idx_51f00e62",
+    "label": "Create index \"user_societyId_idx_51f00e62\" on \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "user_societyId_idx_51f00e62",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"user_societyId_idx_51f00e62\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user_societyId_idx_51f00e62\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"user_societyId_idx_51f00e62\"",
+        "sql": "CREATE INDEX \"user_societyId_idx_51f00e62\" ON \"public\".\"user\" (\"societyId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"user_societyId_idx_51f00e62\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user_societyId_idx_51f00e62\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.wing.wing_societyId_idx_51f00e62",
+    "label": "Create index \"wing_societyId_idx_51f00e62\" on \"wing\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "wing_societyId_idx_51f00e62",
+        "table": "wing"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"wing_societyId_idx_51f00e62\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wing_societyId_idx_51f00e62\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"wing_societyId_idx_51f00e62\"",
+        "sql": "CREATE INDEX \"wing_societyId_idx_51f00e62\" ON \"public\".\"wing\" (\"societyId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"wing_societyId_idx_51f00e62\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wing_societyId_idx_51f00e62\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.flat.flat_wingId_fkey",
+    "label": "Add foreign key \"flat_wingId_fkey\" on \"flat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "flat_wingId_fkey",
+        "table": "flat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"flat_wingId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "flat_wingId_fkey",
+          "public",
+          "\"public\".\"flat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"flat_wingId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"flat\"\nADD CONSTRAINT \"flat_wingId_fkey\"\nFOREIGN KEY (\"wingId\")\nREFERENCES \"public\".\"wing\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"flat_wingId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "flat_wingId_fkey",
+          "public",
+          "\"public\".\"flat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.resident.resident_userId_fkey",
+    "label": "Add foreign key \"resident_userId_fkey\" on \"resident\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "resident_userId_fkey",
+        "table": "resident"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"resident_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_userId_fkey",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"resident_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"resident\"\nADD CONSTRAINT \"resident_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"resident_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_userId_fkey",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.resident.resident_flatId_fkey",
+    "label": "Add foreign key \"resident_flatId_fkey\" on \"resident\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "resident_flatId_fkey",
+        "table": "resident"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"resident_flatId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_flatId_fkey",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"resident_flatId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"resident\"\nADD CONSTRAINT \"resident_flatId_fkey\"\nFOREIGN KEY (\"flatId\")\nREFERENCES \"public\".\"flat\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"resident_flatId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "resident_flatId_fkey",
+          "public",
+          "\"public\".\"resident\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.staff.staff_userId_fkey",
+    "label": "Add foreign key \"staff_userId_fkey\" on \"staff\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "staff_userId_fkey",
+        "table": "staff"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"staff_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_userId_fkey",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"staff_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"staff\"\nADD CONSTRAINT \"staff_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"staff_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_userId_fkey",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.staff.staff_societyId_fkey",
+    "label": "Add foreign key \"staff_societyId_fkey\" on \"staff\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "staff_societyId_fkey",
+        "table": "staff"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"staff_societyId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_societyId_fkey",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"staff_societyId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"staff\"\nADD CONSTRAINT \"staff_societyId_fkey\"\nFOREIGN KEY (\"societyId\")\nREFERENCES \"public\".\"society\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"staff_societyId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "staff_societyId_fkey",
+          "public",
+          "\"public\".\"staff\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.user.user_societyId_fkey",
+    "label": "Add foreign key \"user_societyId_fkey\" on \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "user_societyId_fkey",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"user_societyId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_societyId_fkey",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"user_societyId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"user\"\nADD CONSTRAINT \"user_societyId_fkey\"\nFOREIGN KEY (\"societyId\")\nREFERENCES \"public\".\"society\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"user_societyId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_societyId_fkey",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.wing.wing_societyId_fkey",
+    "label": "Add foreign key \"wing_societyId_fkey\" on \"wing\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "wing_societyId_fkey",
+        "table": "wing"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"wing_societyId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wing_societyId_fkey",
+          "public",
+          "\"public\".\"wing\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"wing_societyId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"wing\"\nADD CONSTRAINT \"wing_societyId_fkey\"\nFOREIGN KEY (\"societyId\")\nREFERENCES \"public\".\"society\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"wing_societyId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wing_societyId_fkey",
+          "public",
+          "\"public\".\"wing\""
+        ]
+      }
+    ]
+  }
+]
