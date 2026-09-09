@@ -12,66 +12,146 @@ export const ForgotPasswordPage: React.FC<{ onNavigate: (path: string) => void }
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-slate-950 text-slate-100 p-4">
-            <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-indigo-500 flex items-center justify-center text-white">
-                        <Building2 className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h1 className="text-base font-extrabold text-white">HorizonHeights</h1>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Reset Account Password</p>
-                    </div>
-                </div>
+        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-violet-950 via-indigo-950 to-fuchsia-950 text-slate-100 p-4">
 
-                {submitted ? (
-                    <div className="p-6 text-center space-y-3 bg-emerald-950/40 border border-emerald-800 rounded-2xl">
-                        <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-                        <h3 className="text-base font-bold text-white">Verification Link Sent</h3>
-                        <p className="text-xs text-slate-300">
-                            We have dispatched password recovery instructions to <strong className="text-white">{email}</strong>.
-                        </p>
-                        <button
-                            onClick={() => onNavigate('/reset-password')}
-                            className="mt-4 px-4 py-2.5 w-full text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 rounded-xl transition-colors"
-                        >
-                            Simulate Opening Reset Link
-                        </button>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <h2 className="text-xl font-bold text-white">Forgot password?</h2>
-                            <p className="text-xs text-slate-400 mt-1">
-                                Enter your registered society email or phone number to receive a secure recovery code.
+            {/* Background blur / glow */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-violet-600/35 blur-[130px]" />
+
+                <div className="absolute top-[15%] -right-40 w-[500px] h-[500px] rounded-full bg-fuchsia-600/25 blur-[140px]" />
+
+                <div className="absolute -bottom-48 left-[35%] w-[550px] h-[550px] rounded-full bg-indigo-500/25 blur-[150px]" />
+
+                <div className="absolute top-[18%] left-[18%] w-2 h-2 rounded-full bg-white/30 blur-sm" />
+                <div className="absolute top-[30%] right-[22%] w-2 h-2 rounded-full bg-fuchsia-300/40 blur-sm" />
+                <div className="absolute bottom-[25%] left-[25%] w-2 h-2 rounded-full bg-violet-300/40 blur-sm" />
+
+            </div>
+
+            {/* Main Card */}
+            <div className="relative z-10 w-full max-w-md px-7 py-7 sm:px-8 sm:py-8 rounded-[28px] bg-white/[0.08] backdrop-blur-2xl border border-white/15 shadow-2xl shadow-black/30">
+
+                {/* Very subtle inner glow */}
+                <div className="absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/[0.06] via-transparent to-fuchsia-500/[0.05] pointer-events-none" />
+
+                <div className="relative z-10">
+
+                    {/* Brand */}
+                    <div className="flex items-center gap-3 mb-8">
+
+                        <div className="w-11 h-11 rounded-[14px] bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25 border border-white/15">
+                            <Building2
+                                className="w-[21px] h-[21px] text-white"
+                                strokeWidth={1.8}
+                            />
+                        </div>
+
+                        <div className="leading-tight">
+                            <h1 className="text-[17px] font-extrabold tracking-tight text-white">
+                                HorizonHeights
+                            </h1>
+
+                            <p className="mt-1 text-[9px] text-violet-200/60 font-bold uppercase tracking-[0.14em]">
+                                Reset Account Password
                             </p>
                         </div>
 
-                        <Input
-                            label="Email Address / Mobile"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="e.g. resident@horizon.com"
-                            icon={<Mail className="w-4 h-4" />}
-                            required
-                        />
+                    </div>
+
+                    {/* Content */}
+                    {submitted ? (
+
+                        <div className="p-6 text-center space-y-4 bg-emerald-500/[0.08] border border-emerald-300/15 rounded-2xl backdrop-blur-xl">
+
+                            <CheckCircle2
+                                className="w-11 h-11 text-emerald-400 mx-auto"
+                                strokeWidth={1.8}
+                            />
+
+                            <h3 className="text-base font-bold text-white">
+                                Verification Link Sent
+                            </h3>
+
+                            <p className="text-xs leading-5 text-slate-300">
+                                We have dispatched password recovery instructions to{' '}
+                                <strong className="text-white">
+                                    {email}
+                                </strong>.
+                            </p>
+
+                            <button
+                                onClick={() => onNavigate('/reset-password')}
+                                className="mt-2 px-4 py-3 w-full text-xs font-bold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-400 rounded-xl transition-all shadow-lg shadow-violet-500/20"
+                            >
+                                Simulate Opening Reset Link
+                            </button>
+
+                        </div>
+
+                    ) : (
+
+                        <form onSubmit={handleSubmit} className="space-y-5">
+
+                            {/* Heading */}
+                            <div className="space-y-1.5">
+
+                                <h2 className="text-[22px] font-bold tracking-tight text-white">
+                                    Forgot password?
+                                </h2>
+
+                                <p className="text-xs leading-5 text-violet-100/60 max-w-[340px]">
+                                    Enter your registered society email or phone number
+                                    to receive a secure recovery code.
+                                </p>
+
+                            </div>
+
+                            {/* Input */}
+                            <div className="pt-1">
+
+                                <Input
+                                    label="Email Address / Mobile"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="e.g. resident@horizon.com"
+                                    icon={<Mail className="w-4 h-4" />}
+                                    required
+                                />
+
+                            </div>
+
+                            {/* Button */}
+                            <button
+                                type="submit"
+                                className="w-full py-3.5 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-400 shadow-lg shadow-violet-500/25 transition-all duration-200"
+                            >
+                                Send Recovery Instructions
+                            </button>
+
+                        </form>
+
+                    )}
+
+                    {/* Back to Login */}
+                    <div className="mt-7 pt-1">
 
                         <button
-                            type="submit"
-                            className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 shadow-lg shadow-brand-600/20 transition-all"
+                            onClick={() => onNavigate('/login')}
+                            className="flex items-center justify-center gap-2 w-full text-xs font-semibold text-violet-200/60 hover:text-white transition-colors"
                         >
-                            Send Recovery Instructions
-                        </button>
-                    </form>
-                )}
+                            <ArrowLeft
+                                className="w-4 h-4"
+                                strokeWidth={1.8}
+                            />
 
-                <button
-                    onClick={() => onNavigate('/login')}
-                    className="flex items-center justify-center gap-2 w-full text-xs font-semibold text-slate-400 hover:text-white transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" /> Back to Login
-                </button>
+                            Back to Login
+                        </button>
+
+                    </div>
+
+                </div>
             </div>
         </div>
     );
