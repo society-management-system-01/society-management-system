@@ -1,94 +1,160 @@
 // use prisma-next
 model Society {
-  id        String                     @id @default(uuid())
+  id        String                  @id @default(uuid())
   name      String
   address   String?
-  createdAt TimestamptzString          @default(now())
+  createdAt TimestamptzString       @default(now())
   updatedAt temporal.updatedAtString()
 
-  wings     Wing[]
-  users     User[]
-  staff     Staff[]
+  wings Wing[]
+  users User[]
+  staff Staff[]
 }
 
 model Wing {
-  id        String                     @id @default(uuid())
+  id        String                  @id @default(uuid())
   name      String
   societyId String
 
-  society   Society                    @relation(fields:[societyId], references:[id])
+  society   Society                 @relation(fields: [societyId], references: [id])
   flats     Flat[]
 
-  createdAt TimestamptzString          @default(now())
+  createdAt TimestamptzString       @default(now())
   updatedAt temporal.updatedAtString()
 
   @@unique([societyId, name])
 }
 
 model Flat {
-  id        String                     @id @default(uuid())
+  id        String                  @id @default(uuid())
   number    String
   wingId    String
 
-  wing      Wing                       @relation(fields:[wingId], references:[id])
+  wing      Wing                    @relation(fields: [wingId], references: [id])
   residents Resident[]
 
-  createdAt TimestamptzString          @default(now())
+  createdAt TimestamptzString       @default(now())
   updatedAt temporal.updatedAtString()
 
   @@unique([wingId, number])
 }
 
 model User {
-  id           String                     @id @default(uuid())
-  email        String                     @unique
+  id           String                  @id @default(uuid())
+  email        String                  @unique
   passwordHash String
   role         UserRole
   societyId    String
 
-  society      Society                    @relation(fields:[societyId], references:[id])
-  resident     Resident?
-  staff        Staff?
+  society           Society            @relation(fields: [societyId], references: [id])
+  resident          Resident?
+  staff             Staff?
+  complaintComments ComplaintComment[]
 
-  createdAt    TimestamptzString          @default(now())
+  createdAt    TimestamptzString       @default(now())
   updatedAt    temporal.updatedAtString()
 }
 
 model Resident {
-  id        String                     @id @default(uuid())
-  userId    String                     @unique
+  id        String                  @id @default(uuid())
+  userId    String                  @unique
   flatId    String
 
-  user      User                       @relation(fields:[userId], references:[id])
-  flat      Flat                       @relation(fields:[flatId], references:[id])
+  user       User                   @relation(fields: [userId], references: [id])
+  flat       Flat                   @relation(fields: [flatId], references: [id])
+  complaints Complaint[]
 
   firstName String
   lastName  String
   phone     String?
 
-  createdAt TimestamptzString          @default(now())
+  createdAt TimestamptzString       @default(now())
   updatedAt temporal.updatedAtString()
 }
 
 model Staff {
-  id          String                     @id @default(uuid())
-  userId      String                     @unique
-  societyId   String
+  id                 String                  @id @default(uuid())
+  userId             String                  @unique
+  societyId          String
 
-  user        User                       @relation(fields:[userId], references:[id])
-  society     Society                    @relation(fields:[societyId], references:[id])
+  user               User                    @relation(fields: [userId], references: [id])
+  society            Society                 @relation(fields: [societyId], references: [id])
+  assignedComplaints Complaint[]
 
   firstName   String
   lastName    String
   phone       String?
   designation String
 
+  createdAt   TimestamptzString       @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+model Complaint {
+  id          String            @id @default(uuid())
+  title       String
+  description String
+  category    ComplaintCategory
+  priority    Priority          @default(MEDIUM)
+  status      ComplaintStatus   @default(PENDING)
+
+  residentId  String
+  resident    Resident          @relation(fields: [residentId], references: [id])
+
+  assignedToId String?
+  assignedTo   Staff?           @relation(fields: [assignedToId], references: [id])
+
+  comments    ComplaintComment[]
+  attachments ComplaintAttachment[]
+
   createdAt   TimestamptzString          @default(now())
   updatedAt   temporal.updatedAtString()
+}
+
+model ComplaintComment {
+  id          String    @id @default(uuid())
+  comment     String
+  complaintId String
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+
+  createdAt   TimestamptzString @default(now())
+}
+
+model ComplaintAttachment {
+  id          String    @id @default(uuid())
+  fileUrl     String
+  complaintId String
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  createdAt   TimestamptzString @default(now())
 }
 
 enum UserRole {
   RESIDENT
   STAFF
   COMMITTEE
+}
+
+enum ComplaintCategory {
+  PLUMBING
+  ELECTRICAL
+  CLEANING
+  SECURITY
+  GENERAL
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ComplaintStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
 }

@@ -4,6 +4,18 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "complaint": {
+      "model": "Complaint",
+      "namespace": "public"
+    },
+    "complaintAttachment": {
+      "model": "ComplaintAttachment",
+      "namespace": "public"
+    },
+    "complaintComment": {
+      "model": "ComplaintComment",
+      "namespace": "public"
+    },
     "flat": {
       "model": "Flat",
       "namespace": "public"
@@ -33,6 +45,73 @@
     "namespaces": {
       "public": {
         "enum": {
+          "ComplaintCategory": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PLUMBING",
+                "value": "PLUMBING"
+              },
+              {
+                "name": "ELECTRICAL",
+                "value": "ELECTRICAL"
+              },
+              {
+                "name": "CLEANING",
+                "value": "CLEANING"
+              },
+              {
+                "name": "SECURITY",
+                "value": "SECURITY"
+              },
+              {
+                "name": "GENERAL",
+                "value": "GENERAL"
+              }
+            ]
+          },
+          "ComplaintStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PENDING",
+                "value": "PENDING"
+              },
+              {
+                "name": "IN_PROGRESS",
+                "value": "IN_PROGRESS"
+              },
+              {
+                "name": "RESOLVED",
+                "value": "RESOLVED"
+              },
+              {
+                "name": "REJECTED",
+                "value": "REJECTED"
+              }
+            ]
+          },
+          "Priority": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "LOW",
+                "value": "LOW"
+              },
+              {
+                "name": "MEDIUM",
+                "value": "MEDIUM"
+              },
+              {
+                "name": "HIGH",
+                "value": "HIGH"
+              },
+              {
+                "name": "URGENT",
+                "value": "URGENT"
+              }
+            ]
+          },
           "UserRole": {
             "codecId": "pg/text@1",
             "members": [
@@ -52,6 +131,355 @@
           }
         },
         "models": {
+          "Complaint": {
+            "fields": {
+              "assignedToId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "category": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ComplaintCategory",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "description": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "priority": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Priority",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "residentId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ComplaintStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "title": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "assignedTo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "assignedToId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Staff",
+                  "namespace": "public"
+                }
+              },
+              "attachments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "complaintId"
+                  ]
+                },
+                "to": {
+                  "model": "ComplaintAttachment",
+                  "namespace": "public"
+                }
+              },
+              "comments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "complaintId"
+                  ]
+                },
+                "to": {
+                  "model": "ComplaintComment",
+                  "namespace": "public"
+                }
+              },
+              "resident": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "residentId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Resident",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "assignedToId": {
+                  "column": "assignedToId"
+                },
+                "category": {
+                  "column": "category"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "description": {
+                  "column": "description"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "priority": {
+                  "column": "priority"
+                },
+                "residentId": {
+                  "column": "residentId"
+                },
+                "status": {
+                  "column": "status"
+                },
+                "title": {
+                  "column": "title"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "complaint"
+            }
+          },
+          "ComplaintAttachment": {
+            "fields": {
+              "complaintId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fileUrl": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "complaint": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "complaintId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Complaint",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "complaintId": {
+                  "column": "complaintId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "fileUrl": {
+                  "column": "fileUrl"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "complaintAttachment"
+            }
+          },
+          "ComplaintComment": {
+            "fields": {
+              "comment": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "complaintId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "complaint": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "complaintId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Complaint",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "comment": {
+                  "column": "comment"
+                },
+                "complaintId": {
+                  "column": "complaintId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "complaintComment"
+            }
+          },
           "Flat": {
             "fields": {
               "createdAt": {
@@ -204,6 +632,21 @@
               }
             },
             "relations": {
+              "complaints": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "residentId"
+                  ]
+                },
+                "to": {
+                  "model": "Complaint",
+                  "namespace": "public"
+                }
+              },
               "flat": {
                 "cardinality": "N:1",
                 "on": {
@@ -440,6 +883,21 @@
               }
             },
             "relations": {
+              "assignedComplaints": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "assignedToId"
+                  ]
+                },
+                "to": {
+                  "model": "Complaint",
+                  "namespace": "public"
+                }
+              },
               "society": {
                 "cardinality": "N:1",
                 "on": {
@@ -564,6 +1022,21 @@
               }
             },
             "relations": {
+              "complaintComments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "ComplaintComment",
+                  "namespace": "public"
+                }
+              },
               "resident": {
                 "cardinality": "1:1",
                 "on": {
@@ -739,6 +1212,320 @@
       "public": {
         "entries": {
           "table": {
+            "complaint": {
+              "checks": [
+                {
+                  "expression": "\"category\" IN ('PLUMBING', 'ELECTRICAL', 'CLEANING', 'SECURITY', 'GENERAL')",
+                  "name": "complaint_category_check_fc516026",
+                  "prefix": "complaint_category_check"
+                },
+                {
+                  "expression": "\"priority\" IN ('LOW', 'MEDIUM', 'HIGH', 'URGENT')",
+                  "name": "complaint_priority_check_8918b779",
+                  "prefix": "complaint_priority_check"
+                },
+                {
+                  "expression": "\"status\" IN ('PENDING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED')",
+                  "name": "complaint_status_check_d3b85d7f",
+                  "prefix": "complaint_status_check"
+                }
+              ],
+              "columns": {
+                "assignedToId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "category": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ComplaintCategory",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "description": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "priority": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "MEDIUM"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Priority",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "residentId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PENDING"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ComplaintStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "title": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "residentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaint"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "resident"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "assignedToId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaint"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "staff"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "assignedToId"
+                  ],
+                  "name": "complaint_assignedToId_idx_45a131c2",
+                  "prefix": "complaint_assignedToId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "residentId"
+                  ],
+                  "name": "complaint_residentId_idx_9d41a33b",
+                  "prefix": "complaint_residentId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "complaintAttachment": {
+              "columns": {
+                "complaintId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fileUrl": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "complaintId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaintAttachment"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaint"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "complaintId"
+                  ],
+                  "name": "complaintAttachment_complaintId_idx_7b731d46",
+                  "prefix": "complaintAttachment_complaintId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "complaintComment": {
+              "columns": {
+                "comment": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "complaintId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "complaintId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaintComment"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaint"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "complaintComment"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "complaintId"
+                  ],
+                  "name": "complaintComment_complaintId_idx_7b731d46",
+                  "prefix": "complaintComment_complaintId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "complaintComment_userId_idx_a489d58a",
+                  "prefix": "complaintComment_userId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "flat": {
               "columns": {
                 "createdAt": {
@@ -1239,6 +2026,34 @@
             }
           },
           "valueSet": {
+            "ComplaintCategory": {
+              "kind": "valueSet",
+              "values": [
+                "PLUMBING",
+                "ELECTRICAL",
+                "CLEANING",
+                "SECURITY",
+                "GENERAL"
+              ]
+            },
+            "ComplaintStatus": {
+              "kind": "valueSet",
+              "values": [
+                "PENDING",
+                "IN_PROGRESS",
+                "RESOLVED",
+                "REJECTED"
+              ]
+            },
+            "Priority": {
+              "kind": "valueSet",
+              "values": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "URGENT"
+              ]
+            },
             "UserRole": {
               "kind": "valueSet",
               "values": [
@@ -1253,12 +2068,60 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f39f4022ce13f9613c77b3758754ffa7a620e89a193ebad0a58334f107db3656"
+    "storageHash": "4ef4a8201466cc14c17910669de0d6497f06241d7bea4c1ffdd647e4c1e659d8"
   },
   "execution": {
-    "executionHash": "8ef7106e06d6a39d9c3fa2973db37f8499abb0ed758efb59ce224b725856c606",
+    "executionHash": "f3c1545522cc028f5e7eeda3097dc5215c645d129547b55b7c812a3be132d348",
     "mutations": {
       "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "complaint"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "complaint"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "complaintAttachment"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "complaintComment"
+          }
+        },
         {
           "onCreate": {
             "id": "uuidv4",
