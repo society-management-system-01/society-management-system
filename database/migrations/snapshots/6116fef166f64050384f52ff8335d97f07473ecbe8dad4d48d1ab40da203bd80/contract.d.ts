@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'87fb14432d7dbf967d4436f5ade98dc062c9d4830f8a6eea1aa52d9d97877ccd'>;
+  StorageHashBase<'6116fef166f64050384f52ff8335d97f07473ecbe8dad4d48d1ab40da203bd80'>;
 export type ExecutionHash =
   ExecutionHashBase<'048b7acb8be50ea881e3e1febd8daec022deebbad1250256d2018947b0cd1da4'>;
 export type ProfileHash =
@@ -285,7 +285,7 @@ export type FieldOutputTypes = {
     };
     readonly Session: {
       readonly id: CodecTypes['pg/text@1']['output'];
-      readonly tokenHash: CodecTypes['pg/text@1']['output'];
+      readonly token: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly ipAddress: CodecTypes['pg/text@1']['output'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
@@ -376,7 +376,7 @@ export type FieldInputTypes = {
     };
     readonly Session: {
       readonly id: CodecTypes['pg/text@1']['input'];
-      readonly tokenHash: CodecTypes['pg/text@1']['input'];
+      readonly token: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly ipAddress: CodecTypes['pg/text@1']['input'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
@@ -471,7 +471,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly ipAddress: CodecTypes['pg/text@1']['output'] | null;
       readonly isRevoked: CodecTypes['pg/bool@1']['output'];
-      readonly tokenHash: CodecTypes['pg/text@1']['output'];
+      readonly token: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
       readonly userId: CodecTypes['pg/text@1']['output'];
@@ -562,7 +562,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly ipAddress: CodecTypes['pg/text@1']['input'] | null;
       readonly isRevoked: CodecTypes['pg/bool@1']['input'];
-      readonly tokenHash: CodecTypes['pg/text@1']['input'];
+      readonly token: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
       readonly userId: CodecTypes['pg/text@1']['input'];
@@ -989,7 +989,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly tokenHash: {
+                readonly token: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -1036,12 +1036,18 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['tokenHash'] }];
+              uniques: readonly [{ readonly columns: readonly ['token'] }];
               indexes: readonly [
                 {
                   readonly name: 'session_userId_idx_a489d58a';
                   readonly prefix: 'session_userId_idx';
                   readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'session_token_idx_8b25281e';
+                  readonly prefix: 'session_token_idx';
+                  readonly columns: readonly ['token'];
                   readonly unique: false;
                 },
               ];
@@ -1724,7 +1730,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly tokenHash: {
+              readonly token: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -1781,7 +1787,7 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly tokenHash: { readonly column: 'tokenHash' };
+                readonly token: { readonly column: 'token' };
                 readonly userId: { readonly column: 'userId' };
                 readonly ipAddress: { readonly column: 'ipAddress' };
                 readonly userAgent: { readonly column: 'userAgent' };
