@@ -50,6 +50,7 @@ model User {
   resident          Resident?
   staff             Staff?
   complaintComments ComplaintComment[]
+  sessions          Session[]          // <--- ADD THIS RELATION FIELD
 
   createdAt    TimestamptzString       @default(now())
   updatedAt    temporal.updatedAtString()
@@ -157,4 +158,21 @@ enum ComplaintStatus {
   IN_PROGRESS
   RESOLVED
   REJECTED
+}
+
+model Session {
+  id           String            @id @default(uuid())
+  tokenHash    String            @unique
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  ipAddress    String?
+  userAgent    String?
+  isRevoked    Boolean           @default(false)
+  
+  expiresAt    TimestamptzString
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+
+  @@index([userId])
 }
