@@ -750,7 +750,7 @@
                   "kind": "scalar"
                 }
               },
-              "token": {
+              "tokenHash": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -813,8 +813,8 @@
                 "isRevoked": {
                   "column": "isRevoked"
                 },
-                "token": {
-                  "column": "token"
+                "tokenHash": {
+                  "column": "tokenHash"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
@@ -1875,7 +1875,7 @@
                   "nativeType": "bool",
                   "nullable": false
                 },
-                "token": {
+                "tokenHash": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -1918,14 +1918,6 @@
               "indexes": [
                 {
                   "columns": [
-                    "token"
-                  ],
-                  "name": "session_token_idx_8b25281e",
-                  "prefix": "session_token_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
                     "userId"
                   ],
                   "name": "session_userId_idx_a489d58a",
@@ -1941,7 +1933,7 @@
               "uniques": [
                 {
                   "columns": [
-                    "token"
+                    "tokenHash"
                   ]
                 }
               ]
@@ -2310,7 +2302,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6116fef166f64050384f52ff8335d97f07473ecbe8dad4d48d1ab40da203bd80"
+    "storageHash": "87fb14432d7dbf967d4436f5ade98dc062c9d4830f8a6eea1aa52d9d97877ccd"
   },
   "execution": {
     "executionHash": "048b7acb8be50ea881e3e1febd8daec022deebbad1250256d2018947b0cd1da4",

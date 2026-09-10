@@ -162,20 +162,17 @@ enum ComplaintStatus {
 
 model Session {
   id           String            @id @default(uuid())
-  token        String            @unique
+  tokenHash    String            @unique
   userId       String
   user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  // Security & Device tracking
   ipAddress    String?
   userAgent    String?
   isRevoked    Boolean           @default(false)
   
-  // Expiration & Timestamps
   expiresAt    TimestamptzString
   createdAt    TimestamptzString @default(now())
   updatedAt    temporal.updatedAtString()
 
   @@index([userId])
-  @@index([token])
 }
