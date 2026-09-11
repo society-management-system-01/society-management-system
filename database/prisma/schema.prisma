@@ -176,3 +176,52 @@ model Session {
 
   @@index([userId])
 }
+
+// Enums
+enum AmenityStatus {
+  AVAILABLE
+  MAINTENANCE
+  CLOSED
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// Models
+model Amenity {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  location    String?
+  capacity    Int?
+  status      AmenityStatus @default(AVAILABLE)
+  societyId   String
+  society     Society       @relation(fields: [societyId], references: [id])
+  bookings    Booking[]
+
+  createdAt   TimestamptzString       @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([societyId])
+}
+
+model Booking {
+  id         String        @id @default(uuid())
+  amenityId  String
+  amenity    Amenity       @relation(fields: [amenityId], references: [id])
+  residentId String
+  resident   Resident      @relation(fields: [residentId], references: [id])
+  startTime  TimestamptzString
+  endTime    TimestamptzString
+  status     BookingStatus @default(PENDING)
+
+  createdAt  TimestamptzString       @default(now())
+  updatedAt  temporal.updatedAtString()
+
+  @@index([amenityId])
+  @@index([residentId])
+}
