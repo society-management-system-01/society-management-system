@@ -208,7 +208,9 @@ model Amenity {
 
   @@index([societyId])
 }
-
+// Booking model with PostgreSQL exclusion constraint applied via custom migration
+model Booking {
+  // ... rest of your model stays identical
 model Booking {
   id         String        @id @default(uuid())
   amenityId  String
