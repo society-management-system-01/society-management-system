@@ -1,4 +1,5 @@
 // use prisma-next
+
 model Society {
   id        String                  @id @default(uuid())
   name      String
@@ -6,9 +7,10 @@ model Society {
   createdAt TimestamptzString       @default(now())
   updatedAt temporal.updatedAtString()
 
-  wings Wing[]
-  users User[]
-  staff Staff[]
+  wings     Wing[]
+  users     User[]
+  staff     Staff[]
+  amenities Amenity[]
 }
 
 model Wing {
@@ -40,37 +42,38 @@ model Flat {
 }
 
 model User {
-  id           String                  @id @default(uuid())
-  email        String                  @unique
-  passwordHash String
-  role         UserRole
-  societyId    String
+  id                String                  @id @default(uuid())
+  email             String                  @unique
+  passwordHash      String
+  role              UserRole
+  societyId         String
 
-  society           Society            @relation(fields: [societyId], references: [id])
+  society           Society                 @relation(fields: [societyId], references: [id])
   resident          Resident?
   staff             Staff?
   complaintComments ComplaintComment[]
-  sessions          Session[]          // <--- ADD THIS RELATION FIELD
+  sessions          Session[]
 
-  createdAt    TimestamptzString       @default(now())
-  updatedAt    temporal.updatedAtString()
+  createdAt         TimestamptzString      @default(now())
+  updatedAt         temporal.updatedAtString()
 }
 
 model Resident {
-  id        String                  @id @default(uuid())
-  userId    String                  @unique
-  flatId    String
+  id         String                  @id @default(uuid())
+  userId     String                  @unique
+  flatId     String
 
-  user       User                   @relation(fields: [userId], references: [id])
-  flat       Flat                   @relation(fields: [flatId], references: [id])
+  user       User                    @relation(fields: [userId], references: [id])
+  flat       Flat                    @relation(fields: [flatId], references: [id])
   complaints Complaint[]
+  bookings   Booking[]
 
-  firstName String
-  lastName  String
-  phone     String?
+  firstName  String
+  lastName   String
+  phone      String?
 
-  createdAt TimestamptzString       @default(now())
-  updatedAt temporal.updatedAtString()
+  createdAt  TimestamptzString      @default(now())
+  updatedAt  temporal.updatedAtString()
 }
 
 model Staff {
@@ -82,13 +85,13 @@ model Staff {
   society            Society                 @relation(fields: [societyId], references: [id])
   assignedComplaints Complaint[]
 
-  firstName   String
-  lastName    String
-  phone       String?
-  designation String
+  firstName          String
+  lastName           String
+  phone              String?
+  designation        String
 
-  createdAt   TimestamptzString       @default(now())
-  updatedAt   temporal.updatedAtString()
+  createdAt          TimestamptzString      @default(now())
+  updatedAt          temporal.updatedAtString()
 }
 
 model Complaint {
@@ -108,7 +111,7 @@ model Complaint {
   comments    ComplaintComment[]
   attachments ComplaintAttachment[]
 
-  createdAt   TimestamptzString          @default(now())
+  createdAt   TimestamptzString       @default(now())
   updatedAt   temporal.updatedAtString()
 }
 
@@ -161,23 +164,23 @@ enum ComplaintStatus {
 }
 
 model Session {
-  id           String            @id @default(uuid())
-  tokenHash    String            @unique
-  userId       String
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  ipAddress    String?
-  userAgent    String?
-  isRevoked    Boolean           @default(false)
-  
-  expiresAt    TimestamptzString
-  createdAt    TimestamptzString @default(now())
-  updatedAt    temporal.updatedAtString()
+  id         String            @id @default(uuid())
+  tokenHash  String            @unique
+  userId     String
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  ipAddress  String?
+  userAgent  String?
+  isRevoked  Boolean           @default(false)
+
+  expiresAt  TimestamptzString
+  createdAt  TimestamptzString @default(now())
+  updatedAt  temporal.updatedAtString()
 
   @@index([userId])
 }
 
-// Enums
 enum AmenityStatus {
   AVAILABLE
   MAINTENANCE
@@ -191,7 +194,6 @@ enum BookingStatus {
   CANCELLED
 }
 
-// Models
 model Amenity {
   id          String        @id @default(uuid())
   name        String
@@ -199,29 +201,30 @@ model Amenity {
   location    String?
   capacity    Int?
   status      AmenityStatus @default(AVAILABLE)
+
   societyId   String
   society     Society       @relation(fields: [societyId], references: [id])
   bookings    Booking[]
 
-  createdAt   TimestamptzString       @default(now())
+  createdAt   TimestamptzString @default(now())
   updatedAt   temporal.updatedAtString()
 
   @@index([societyId])
 }
-// Booking model with PostgreSQL exclusion constraint applied via custom migration
-model Booking {
-  // ... rest of your model stays identical
+
 model Booking {
   id         String        @id @default(uuid())
   amenityId  String
-  amenity    Amenity       @relation(fields: [amenityId], references: [id])
+  amenity    Amenity      @relation(fields: [amenityId], references: [id])
+
   residentId String
   resident   Resident      @relation(fields: [residentId], references: [id])
+
   startTime  TimestamptzString
   endTime    TimestamptzString
   status     BookingStatus @default(PENDING)
 
-  createdAt  TimestamptzString       @default(now())
+  createdAt  TimestamptzString @default(now())
   updatedAt  temporal.updatedAtString()
 
   @@index([amenityId])
