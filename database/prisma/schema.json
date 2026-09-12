@@ -948,6 +948,21 @@
               }
             },
             "relations": {
+              "bookings": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "residentId"
+                  ]
+                },
+                "to": {
+                  "model": "Booking",
+                  "namespace": "public"
+                }
+              },
               "complaints": {
                 "cardinality": "1:N",
                 "on": {
@@ -1181,6 +1196,21 @@
               }
             },
             "relations": {
+              "amenities": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "societyId"
+                  ]
+                },
+                "to": {
+                  "model": "Amenity",
+                  "namespace": "public"
+                }
+              },
               "staff": {
                 "cardinality": "1:N",
                 "on": {

@@ -2109,6 +2109,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly bookings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Booking';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['residentId'];
+                };
+              };
               readonly complaints: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2256,6 +2267,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly amenities: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Amenity';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['societyId'];
+                };
+              };
               readonly staff: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
