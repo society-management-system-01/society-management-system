@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "op_enable_btree_gist",
+    "label": "Enable btree_gist extension for range exclusion",
+    "operationClass": "additive",
+    "type": "sql",
+    "sql": "CREATE EXTENSION IF NOT EXISTS btree_gist;"
+  },
+  {
+    "id": "op_add_booking_exclusion_constraint",
+    "label": "Add GiST exclusion constraint for overlapping bookings",
+    "operationClass": "additive",
+    "type": "sql",
+    "sql": "\n          ALTER TABLE \"booking\" \n          ADD CONSTRAINT \"no_overlapping_bookings\" \n          EXCLUDE USING gist (\n            \"amenityId\" WITH =,\n            tstzrange(\"startTime\", \"endTime\", '[)') WITH &&\n          ) WHERE (status IN ('PENDING', 'APPROVED'));\n        "
+  }
+]
