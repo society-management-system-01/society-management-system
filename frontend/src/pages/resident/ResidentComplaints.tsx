@@ -411,110 +411,110 @@ export const ResidentComplaints: React.FC<ResidentComplaintsProps> = ({ onNaviga
                             <div className="p-4 rounded-2xl bg-brand-50/50 dark:bg-brand-950/30 border border-brand-200/80 dark:border-brand-900/50 flex items-center justify-between gap-4">
                                 <div className="flex items-center gap-3">
                                     <img
-                                        src={activeComplaint.assignedWorkerAvatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'}
-                                        alt={activeComplaint.assignedWorkerName}
-                                        className="w-10 h-10 rounded-xl object-cover ring-2 ring-brand-500/30"
-                                    />
-                                    <div>
-                                        <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">Assigned Staff</span>
-                                        <h5 className="text-xs font-bold text-slate-900 dark:text-white">{activeComplaint.assignedWorkerName}</h5>
-                                    </div>
-                                </div>
-
-                                {activeComplaint.assignedWorkerPhone && (
-                                    <a
-                                        href={`tel:${activeComplaint.assignedWorkerPhone}`}
-                                        className="px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-brand-500 transition-colors"
-                                    >
-                                        <Phone className="w-3.5 h-3.5" /> Call Worker
-                                    </a>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Status Timeline */}
-                        <div className="space-y-3">
-                            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Resolution Status Timeline</h4>
-                            <ActivityTimeline steps={activeComplaint.timeline} currentStatus={activeComplaint.status} />
-                        </div>
-
-                        {/* Reopen Action for Resolved Tickets */}
-                        {(activeComplaint.status === 'resolved' || activeComplaint.status === 'closed') && (
-                            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h5 className="text-xs font-bold text-amber-900 dark:text-amber-200">Is your issue completely fixed?</h5>
-                                        <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5">
-                                            If the problem persists, you can reopen this ticket for the technician.
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowReopenInput((prev) => !prev)}
-                                        className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
-                                    >
-                                        <RotateCcw className="w-3.5 h-3.5" /> Reopen Ticket
-                                    </button>
-                                </div>
-
-                                {showReopenInput && (
-                                    <div className="pt-2 space-y-2">
-                                        <Input
-                                            label="Reason for reopening"
-                                            value={reopenReason}
-                                            onChange={(e) => setReopenReason(e.target.value)}
-                                            placeholder="e.g. Water leak started again from joint"
-                                        />
-                                        <button
-                                            onClick={handleReopen}
-                                            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold"
-                                        >
-                                            Confirm Reopen Ticket
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Activity Comments Section */}
-                        <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Comments & Discussion</h4>
-
-                            <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
-                                {activeComplaint.comments.length === 0 ? (
-                                    <p className="text-xs text-slate-400 text-center py-2">No comments yet. Leave a message below.</p>
-                                ) : (
-                                    activeComplaint.comments.map((cmt) => (
-                                        <div key={cmt.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 space-y-1">
-                                            <div className="flex items-center justify-between text-[11px]">
-                                                <span className="font-bold text-slate-900 dark:text-white">{cmt.authorName} ({cmt.authorRole})</span>
-                                                <span className="text-slate-400">{new Date(cmt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                            </div>
-                                            <p className="text-xs text-slate-700 dark:text-slate-300">{cmt.text}</p>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            {/* Comment Input */}
-                            <form onSubmit={handleAddComment} className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={commentText}
-                                    onChange={(e) => setCommentText(e.target.value)}
-                                    placeholder="Write a message to the technician..."
-                                    className="flex-1 px-3.5 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400"
-                                />
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold hover:bg-brand-500 transition-colors flex items-center gap-1"
-                                >
-                                    <Send className="w-3.5 h-3.5" />
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </Modal>
-            )}
-        </div>
-    );
-};
+                                        src={activeComplaint.assignedWorkerAvatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'} 
+                                        alt={activeComplaint.assignedWorkerName} 
+                                        className="w-10 h-10 rounded-xl object-cover ring-2 ring-brand-500/30" 
+                                    /> 
+                                    <div> 
+                                        <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">Assigned Staff</span> 
+                                        <h5 className="text-xs font-bold text-slate-900 dark:text-white">{activeComplaint.assignedWorkerName}</h5> 
+                                    </div> 
+                                </div> 
+ 
+                                {activeComplaint.assignedWorkerPhone && ( 
+                                    <a 
+                                        href={`tel:${activeComplaint.assignedWorkerPhone}`} 
+                                        className="px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-brand-500 transition-colors" 
+                                    > 
+                                        <Phone className="w-3.5 h-3.5" /> Call Worker 
+                                    </a> 
+                                )} 
+                            </div> 
+                        )} 
+ 
+                        {/* Status Timeline */} 
+                        <div className="space-y-3"> 
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Resolution Status Timeline</h4> 
+                            <ActivityTimeline steps={activeComplaint.timeline} currentStatus={activeComplaint.status} /> 
+                        </div> 
+ 
+                        {/* Reopen Action for Resolved Tickets */} 
+                        {(activeComplaint.status === 'resolved' || activeComplaint.status === 'closed') && ( 
+                            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 space-y-3"> 
+                                <div className="flex items-center justify-between"> 
+                                    <div> 
+                                        <h5 className="text-xs font-bold text-amber-900 dark:text-amber-200">Is your issue completely fixed?</h5> 
+                                        <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5"> 
+                                            If the problem persists, you can reopen this ticket for the technician. 
+                                        </p> 
+                                    </div> 
+                                    <button 
+                                        onClick={() => setShowReopenInput((prev) => !prev)} 
+                                        className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs" 
+                                    > 
+                                        <RotateCcw className="w-3.5 h-3.5" /> Reopen Ticket 
+                                    </button> 
+                                </div> 
+ 
+                                {showReopenInput && ( 
+                                    <div className="pt-2 space-y-2"> 
+                                        <Input 
+                                            label="Reason for reopening" 
+                                            value={reopenReason} 
+                                            onChange={(e) => setReopenReason(e.target.value)} 
+                                            placeholder="e.g. Water leak started again from joint" 
+                                        /> 
+                                        <button 
+                                            onClick={handleReopen} 
+                                            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold" 
+                                        > 
+                                            Confirm Reopen Ticket 
+                                        </button> 
+                                    </div> 
+                                )} 
+                            </div> 
+                        )} 
+ 
+                        {/* Activity Comments Section */} 
+                        <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800"> 
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Comments & Discussion</h4> 
+ 
+                            <div className="space-y-3 max-h-48 overflow-y-auto pr-1"> 
+                                {activeComplaint.comments.length === 0 ? ( 
+                                    <p className="text-xs text-slate-400 text-center py-2">No comments yet. Leave a message below.</p> 
+                                ) : ( 
+                                    activeComplaint.comments.map((cmt) => ( 
+                                        <div key={cmt.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 space-y-1"> 
+                                            <div className="flex items-center justify-between text-[11px]"> 
+                                                <span className="font-bold text-slate-900 dark:text-white">{cmt.authorName} ({cmt.authorRole})</span> 
+                                                <span className="text-slate-400">{new Date(cmt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span> 
+                                            </div> 
+                                            <p className="text-xs text-slate-700 dark:text-slate-300">{cmt.text}</p> 
+                                        </div> 
+                                    )) 
+                                )} 
+                            </div> 
+ 
+                            {/* Comment Input */} 
+                            <form onSubmit={handleAddComment} className="flex gap-2"> 
+                                <input 
+                                    type="text" 
+                                    value={commentText} 
+                                    onChange={(e) => setCommentText(e.target.value)} 
+                                    placeholder="Write a message to the technician..." 
+                                    className="flex-1 px-3.5 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400" 
+                                /> 
+                                <button 
+                                    type="submit" 
+                                    className="px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold hover:bg-brand-500 transition-colors flex items-center gap-1" 
+                                > 
+                                    <Send className="w-3.5 h-3.5" /> 
+                                </button> 
+                            </form> 
+                        </div> 
+                    </div> 
+                </Modal> 
+            )} 
+        </div> 
+    ); 
+}; 

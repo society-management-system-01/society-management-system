@@ -18,6 +18,7 @@ import { ResidentVisitors } from './pages/resident/ResidentVisitors';
 import { ResidentDeliveries } from './pages/resident/ResidentDeliveries';
 import { ResidentAnnouncements } from './pages/resident/ResidentAnnouncements';
 import { ResidentProfile } from './pages/resident/ResidentProfile';
+import { ResidentNotifications } from './pages/resident/ResidentNotifications';
 
 // Staff Pages
 import { StaffDashboard } from './pages/staff/StaffDashboard';
@@ -83,6 +84,9 @@ const RouterContent: React.FC = () => {
                     return <ResidentDeliveries onNavigate={handleNavigate} />;
                 case '/resident/announcements':
                     return <ResidentAnnouncements onNavigate={handleNavigate} />;
+                case '/resident/notifications':
+    return <ResidentNotifications onNavigate={handleNavigate} />;
+
                 case '/resident/profile':
                     return <ResidentProfile onNavigate={handleNavigate} />;
                 default:
