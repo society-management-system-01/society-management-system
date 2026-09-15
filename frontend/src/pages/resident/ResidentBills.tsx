@@ -3,24 +3,37 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { mockApi } from '../../services/mockApi';
 import { Bill } from '../../types';
-import { StatCard, Card } from '../../components/common/Cards';
+import { Card } from '../../components/common/Cards';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { Modal } from '../../components/common/Modal';
 import { DataTable } from '../../components/common/DataTable';
-import { EmptyState, CardSkeleton } from '../../components/common/FeedbackStates';
+import { EmptyState } from '../../components/common/FeedbackStates';
 import {
     CreditCard,
     Download,
     CheckCircle2,
     Receipt,
-    Building,
+    Building2,
     QrCode,
     ShieldCheck,
-    ArrowRight,
-    FileText
+    ArrowUpRight,
+    FileText,
+    WalletCards,
+    CalendarDays,
+    CircleDollarSign,
+    BadgeCheck,
+    Landmark,
+    Sparkles,
+    ChevronRight,
+    AlertCircle,
+    Droplets,
+    Car,
+    Wrench,
 } from 'lucide-react';
 
-export const ResidentBills: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate }) => {
+export const ResidentBills: React.FC<{
+    onNavigate: (path: string) => void;
+}> = ({ onNavigate }) => {
     const { currentUser } = useAuth();
     const toast = useToast();
 
@@ -29,7 +42,9 @@ export const ResidentBills: React.FC<{ onNavigate: (path: string) => void }> = (
 
     // Payment Checkout Modal
     const [payingBill, setPayingBill] = useState<Bill | null>(null);
-    const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
+    const [paymentMethod, setPaymentMethod] = useState<
+        'upi' | 'card' | 'netbanking'
+    >('upi');
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Receipt Modal
@@ -41,288 +56,920 @@ export const ResidentBills: React.FC<{ onNavigate: (path: string) => void }> = (
 
     async function loadBills() {
         setLoading(true);
+
         const data = await mockApi.getBills();
-        setBills(data.filter((b) => b.flatNumber === currentUser.flatNumber));
+
+        setBills(
+            data.filter(
+                (b) => b.flatNumber === currentUser.flatNumber
+            )
+        );
+
         setLoading(false);
     }
 
-    const pendingBill = bills.find((b) => b.status === 'pending');
-    const paidBills = bills.filter((b) => b.status === 'paid');
+    const pendingBill = bills.find(
+        (b) => b.status === 'pending'
+    );
+
+    const paidBills = bills.filter(
+        (b) => b.status === 'paid'
+    );
+
+    const totalPaid = paidBills.reduce(
+        (sum, bill) => sum + bill.amount,
+        0
+    );
 
     const handleProcessPayment = async () => {
         if (!payingBill) return;
+
         setIsProcessing(true);
 
         setTimeout(async () => {
-            const txId = 'TXN-' + Math.floor(10000000 + Math.random() * 90000000);
-            const updated = await mockApi.payBill(payingBill.id, paymentMethod);
+            const txId =
+                'TXN-' +
+                Math.floor(
+                    10000000 + Math.random() * 90000000
+                );
+
+            const updated = await mockApi.payBill(
+                payingBill.id,
+                paymentMethod
+            );
+
             if (updated) {
-                toast.success('Payment Successful!', `Transaction #${txId} recorded. Receipt generated.`);
+                toast.success(
+                    'Payment Successful!',
+                    `Transaction #${txId} recorded. Receipt generated.`
+                );
+
                 setPayingBill(null);
                 setReceiptBill(updated);
                 loadBills();
             }
+
             setIsProcessing(false);
         }, 1200);
     };
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                    Maintenance Bills & Payments
-                </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Review itemized society maintenance dues, pay securely, and download PDF receipts.
-                </p>
-            </div>
+        <div className="min-h-full space-y-7 pb-10">
 
-            {/* Dues Hero Banner */}
+            {/* =========================================================
+                HEADER
+            ========================================================= */}
+            <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50 p-6 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 sm:p-7">
+
+                {/* Ambient decoration */}
+                <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-brand-500/10 blur-3xl" />
+
+                <div className="pointer-events-none absolute -bottom-28 right-32 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl" />
+
+                <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+
+                    <div className="max-w-2xl">
+
+                        {/* Section label */}
+                        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-brand-500/20 bg-brand-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-400">
+                            <WalletCards className="h-3.5 w-3.5" />
+                            Financial Center
+                        </div>
+
+                        <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white sm:text-3xl">
+                            Bills & Payments
+                            <span className="text-brand-500">
+                                {' '}Center
+                            </span>
+                        </h1>
+
+                        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500 dark:text-slate-400">
+                            Manage your society maintenance dues, review
+                            itemized charges, make secure payments, and
+                            access your payment receipts.
+                        </p>
+
+                        {/* Stats */}
+                        <div className="mt-5 flex flex-wrap gap-3">
+
+                            <div className="flex items-center gap-2 rounded-xl bg-slate-100/80 px-3 py-2 dark:bg-slate-800/70">
+                                <CircleDollarSign className="h-4 w-4 text-rose-500" />
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Outstanding
+                                    </span>
+
+                                    <p className="text-xs font-black text-slate-700 dark:text-slate-200">
+                                        ₹
+                                        {pendingBill
+                                            ? pendingBill.amount.toLocaleString()
+                                            : '0'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 rounded-xl bg-slate-100/80 px-3 py-2 dark:bg-slate-800/70">
+                                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Paid
+                                    </span>
+
+                                    <p className="text-xs font-black text-slate-700 dark:text-slate-200">
+                                        ₹{totalPaid.toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 rounded-xl bg-slate-100/80 px-3 py-2 dark:bg-slate-800/70">
+                                <Receipt className="h-4 w-4 text-sky-500" />
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Receipts
+                                    </span>
+
+                                    <p className="text-xs font-black text-slate-700 dark:text-slate-200">
+                                        {paidBills.length}
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* Secure indicator */}
+                    <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
+                            <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                        </div>
+
+                        <div>
+                            <p className="text-xs font-black text-slate-800 dark:text-white">
+                                Secure Payments
+                            </p>
+
+                            <p className="mt-0.5 text-[10px] text-slate-400">
+                                Protected transaction flow
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+
+            {/* =========================================================
+                PENDING DUES
+            ========================================================= */}
             {pendingBill ? (
-                <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-rose-900/90 via-slate-900 to-rose-950 text-white shadow-2xl border border-rose-800/60 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-                    <div className="relative z-10 space-y-2">
-                        <span className="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30 uppercase tracking-wider">
-                            Pending Dues • Due {pendingBill.dueDate}
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl font-black">
-                            ₹{pendingBill.amount.toLocaleString()} <span className="text-sm font-normal opacity-80">({pendingBill.monthYear || pendingBill.month})</span>
-                        </h2>
-                        <p className="text-xs text-rose-200">
-                            Includes regular maintenance, sinking fund, water charges, and parking allocations.
-                        </p>
-                    </div>
 
-                    <div className="relative z-10">
-                        <button
-                            onClick={() => setPayingBill(pendingBill)}
-                            className="w-full md:w-auto px-6 py-3 rounded-2xl text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-500 shadow-xl shadow-rose-600/30 transition-all flex items-center justify-center gap-2 group"
-                        >
-                            <CreditCard className="w-4 h-4" /> Pay Maintenance Now
-                        </button>
+                <section className="relative overflow-hidden rounded-3xl border border-rose-500/20 bg-gradient-to-br from-slate-950 via-rose-950/80 to-slate-950 p-6 text-white shadow-xl sm:p-7">
+
+                    {/* Decorative glow */}
+                    <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-rose-500/20 blur-3xl" />
+
+                    <div className="relative flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between">
+
+                        <div>
+
+                            <div className="flex flex-wrap items-center gap-2">
+
+                                <span className="flex items-center gap-1.5 rounded-full border border-rose-400/20 bg-rose-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-rose-300">
+                                    <AlertCircle className="h-3.5 w-3.5" />
+                                    Payment Due
+                                </span>
+
+                                <span className="text-[10px] font-semibold text-slate-400">
+                                    Due {pendingBill.dueDate}
+                                </span>
+
+                            </div>
+
+                            <p className="mt-4 text-xs font-semibold text-rose-200/80">
+                                {pendingBill.monthYear ||
+                                    pendingBill.month}{' '}
+                                Maintenance
+                            </p>
+
+                            <div className="mt-1 flex items-end gap-2">
+                                <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
+                                    ₹
+                                    {pendingBill.amount.toLocaleString()}
+                                </h2>
+
+                                <span className="mb-1.5 text-[10px] font-semibold text-slate-400">
+                                    outstanding
+                                </span>
+                            </div>
+
+                            <p className="mt-3 max-w-xl text-xs leading-5 text-slate-400">
+                                Your monthly society dues include regular
+                                maintenance, sinking fund, utilities,
+                                parking and applicable facility charges.
+                            </p>
+
+                        </div>
+
+
+                        <div className="relative min-w-[190px]">
+
+                            <button
+                                onClick={() =>
+                                    setPayingBill(pendingBill)
+                                }
+                                className="group flex w-full items-center justify-between gap-4 rounded-2xl bg-rose-600 px-5 py-4 text-xs font-black text-white shadow-xl shadow-rose-900/30 transition-all hover:bg-rose-500 hover:shadow-2xl"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <CreditCard className="h-4 w-4" />
+                                    Pay Maintenance
+                                </span>
+
+                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15 transition-transform group-hover:translate-x-0.5">
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </span>
+                            </button>
+
+                            <div className="mt-3 flex items-center justify-center gap-1.5 text-[9px] text-slate-500">
+                                <ShieldCheck className="h-3 w-3 text-emerald-400" />
+                                Secure payment processing
+                            </div>
+
+                        </div>
+
                     </div>
-                </div>
+                </section>
+
             ) : (
-                <div className="p-6 rounded-3xl bg-emerald-950/40 border border-emerald-800 text-emerald-200 flex items-center gap-4">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-400 shrink-0" />
-                    <div>
-                        <h3 className="text-base font-bold text-white">All Dues Cleared!</h3>
-                        <p className="text-xs opacity-80 mt-0.5">
-                            You have no pending maintenance bills. Thank you for timely payments.
-                        </p>
+
+                <section className="rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/50 to-slate-950 p-6 text-emerald-200">
+
+                    <div className="flex items-center gap-4">
+
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10">
+                            <BadgeCheck className="h-7 w-7 text-emerald-400" />
+                        </div>
+
+                        <div>
+                            <h3 className="text-base font-black text-white">
+                                All Dues Cleared
+                            </h3>
+
+                            <p className="mt-1 text-xs text-emerald-200/70">
+                                You have no pending maintenance bills.
+                                Thank you for keeping your payments up to date.
+                            </p>
+                        </div>
+
                     </div>
-                </div>
+                </section>
             )}
 
-            {/* Itemized Breakdown of Current Bill */}
+
+            {/* =========================================================
+                CURRENT BILL BREAKDOWN
+            ========================================================= */}
             {pendingBill && (
-                <Card title="Current Bill Breakdown" subtitle={`Invoice #${pendingBill.billNumber || pendingBill.invoiceNumber || 'INV-2026'}`}>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+
+                <Card
+                    title="Current Bill Breakdown"
+                    subtitle={`Invoice #${
+                        pendingBill.billNumber ||
+                        pendingBill.invoiceNumber ||
+                        'INV-2026'
+                    }`}
+                >
+
+                    <div className="mb-5 flex items-center justify-between">
+
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                {pendingBill.monthYear ||
+                                    pendingBill.month}
+                            </p>
+
+                            <p className="mt-1 text-sm font-black text-slate-900 dark:text-white">
+                                Itemized society charges
+                            </p>
+                        </div>
+
+                        <FileText className="h-5 w-5 text-slate-300 dark:text-slate-700" />
+
+                    </div>
+
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
                         {Array.isArray(pendingBill.breakdown) ? (
+
                             pendingBill.breakdown.map((item, idx) => (
-                                <div key={idx} className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                                    <span className="text-[11px] text-slate-400 font-medium">{item.description}</span>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+
+                                <div
+                                    key={idx}
+                                    className="group rounded-2xl border border-slate-200 bg-slate-50 p-4 transition-all hover:-translate-y-0.5 hover:border-brand-500/30 dark:border-slate-800 dark:bg-slate-800/40"
+                                >
+
+                                    <div className="flex items-center justify-between">
+
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                            Charge {idx + 1}
+                                        </span>
+
+                                        <CircleDollarSign className="h-4 w-4 text-brand-500/60" />
+
+                                    </div>
+
+                                    <p className="mt-3 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                                        {item.description}
+                                    </p>
+
+                                    <p className="mt-1 text-lg font-black text-slate-900 dark:text-white">
                                         ₹{item.amount.toLocaleString()}
                                     </p>
+
                                 </div>
+
                             ))
+
                         ) : (
+
                             <>
-                                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                                    <span className="text-[11px] text-slate-400 font-medium">Society Maintenance</span>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
-                                        ₹{(pendingBill.breakdown as any)?.maintenance?.toLocaleString() || '3,500'}
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
+                                    <div className="flex items-center gap-2">
+                                        <Wrench className="h-4 w-4 text-brand-500" />
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                            Maintenance
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-3 text-lg font-black text-slate-900 dark:text-white">
+                                        ₹
+                                        {(pendingBill.breakdown as any)
+                                            ?.maintenance
+                                            ?.toLocaleString() ||
+                                            '3,500'}
                                     </p>
                                 </div>
-                                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                                    <span className="text-[11px] text-slate-400 font-medium">Sinking Fund</span>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
-                                        ₹{(pendingBill.breakdown as any)?.sinkingFund?.toLocaleString() || '300'}
+
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
+                                    <div className="flex items-center gap-2">
+                                        <Landmark className="h-4 w-4 text-violet-500" />
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                            Sinking Fund
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-3 text-lg font-black text-slate-900 dark:text-white">
+                                        ₹
+                                        {(pendingBill.breakdown as any)
+                                            ?.sinkingFund
+                                            ?.toLocaleString() ||
+                                            '300'}
                                     </p>
                                 </div>
-                                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                                    <span className="text-[11px] text-slate-400 font-medium">Water & Utility</span>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
-                                        ₹{(pendingBill.breakdown as any)?.waterCharges?.toLocaleString() || '650'}
+
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
+                                    <div className="flex items-center gap-2">
+                                        <Droplets className="h-4 w-4 text-sky-500" />
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                            Water & Utility
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-3 text-lg font-black text-slate-900 dark:text-white">
+                                        ₹
+                                        {(pendingBill.breakdown as any)
+                                            ?.waterCharges
+                                            ?.toLocaleString() ||
+                                            '650'}
                                     </p>
                                 </div>
-                                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                                    <span className="text-[11px] text-slate-400 font-medium">Clubhouse & Facilities</span>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
-                                        ₹{(pendingBill.breakdown as any)?.parkingCharges?.toLocaleString() || '400'}
+
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
+                                    <div className="flex items-center gap-2">
+                                        <Car className="h-4 w-4 text-amber-500" />
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                            Facilities
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-3 text-lg font-black text-slate-900 dark:text-white">
+                                        ₹
+                                        {(pendingBill.breakdown as any)
+                                            ?.parkingCharges
+                                            ?.toLocaleString() ||
+                                            '400'}
                                     </p>
                                 </div>
                             </>
+
                         )}
+
                     </div>
+
                 </Card>
             )}
 
-            {/* Payment History Table */}
-            <Card title="Payment History & Receipts" subtitle="Past society maintenance bills">
+
+            {/* =========================================================
+                PAYMENT HISTORY
+            ========================================================= */}
+            <Card
+                title="Payment History & Receipts"
+                subtitle="Your society maintenance payment records"
+            >
+
+                <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/30 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div className="flex items-center gap-3">
+
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10">
+                            <Receipt className="h-5 w-5 text-brand-500" />
+                        </div>
+
+                        <div>
+                            <p className="text-xs font-black text-slate-800 dark:text-white">
+                                {bills.length} Payment Records
+                            </p>
+
+                            <p className="mt-0.5 text-[10px] text-slate-400">
+                                Keep track of your society dues and receipts
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div className="flex items-center gap-2 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        <ShieldCheck className="h-3.5 w-3.5" />
+                        Verified payment records
+                    </div>
+
+                </div>
+
+
                 <DataTable
                     columns={[
                         {
                             header: 'Month & Invoice',
                             accessorKey: 'monthYear',
                             cell: (item: Bill) => (
-                                <div>
-                                    <p className="font-bold text-slate-900 dark:text-white">{item.monthYear || item.month}</p>
-                                    <p className="text-[10px] text-slate-400 font-mono">#{item.billNumber || item.invoiceNumber}</p>
+                                <div className="flex items-center gap-3">
+
+                                    <div className="hidden h-9 w-9 items-center justify-center rounded-xl bg-brand-500/10 sm:flex">
+                                        <CalendarDays className="h-4 w-4 text-brand-500" />
+                                    </div>
+
+                                    <div>
+                                        <p className="font-bold text-slate-900 dark:text-white">
+                                            {item.monthYear ||
+                                                item.month}
+                                        </p>
+
+                                        <p className="text-[10px] font-mono text-slate-400">
+                                            #
+                                            {item.billNumber ||
+                                                item.invoiceNumber}
+                                        </p>
+                                    </div>
+
                                 </div>
-                            )
+                            ),
                         },
+
                         {
-                            header: 'Amount Dues',
+                            header: 'Amount Due',
                             accessorKey: 'amount',
-                            cell: (item: Bill) => <span className="font-bold">₹{item.amount.toLocaleString()}</span>
+                            cell: (item: Bill) => (
+                                <span className="font-black text-slate-900 dark:text-white">
+                                    ₹{item.amount.toLocaleString()}
+                                </span>
+                            ),
                         },
+
                         {
                             header: 'Due Date',
-                            accessorKey: 'dueDate'
+                            accessorKey: 'dueDate',
+                            cell: (item: Bill) => (
+                                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <CalendarDays className="h-3.5 w-3.5" />
+                                    {item.dueDate}
+                                </div>
+                            ),
                         },
+
                         {
                             header: 'Status',
                             accessorKey: 'status',
-                            cell: (item: Bill) => <StatusBadge value={item.status} size="sm" />
+                            cell: (item: Bill) => (
+                                <StatusBadge
+                                    value={item.status}
+                                    size="sm"
+                                />
+                            ),
                         },
+
                         {
                             header: 'Receipt',
                             accessorKey: 'id',
                             cell: (item: Bill) =>
                                 item.status === 'paid' ? (
+
                                     <button
-                                        onClick={() => setReceiptBill(item)}
-                                        className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-brand-600 dark:text-brand-400 hover:bg-slate-200 text-xs font-bold flex items-center gap-1"
+                                        onClick={() =>
+                                            setReceiptBill(item)
+                                        }
+                                        className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-brand-600 transition-all hover:bg-brand-50 dark:bg-slate-800 dark:text-brand-400 dark:hover:bg-slate-700"
                                     >
-                                        <Receipt className="w-3.5 h-3.5" /> View Receipt
+                                        <Receipt className="h-3.5 w-3.5" />
+                                        Receipt
+                                        <ChevronRight className="h-3 w-3" />
                                     </button>
+
                                 ) : (
+
                                     <button
-                                        onClick={() => setPayingBill(item)}
-                                        className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold"
+                                        onClick={() =>
+                                            setPayingBill(item)
+                                        }
+                                        className="flex items-center gap-1.5 rounded-xl bg-rose-600 px-3 py-2 text-xs font-bold text-white shadow-sm transition-all hover:bg-rose-500"
                                     >
+                                        <CreditCard className="h-3.5 w-3.5" />
                                         Pay Now
                                     </button>
-                                )
-                        }
+
+                                ),
+                        },
                     ]}
                     data={bills}
                     keyExtractor={(item) => item.id}
                     searchPlaceholder="Search invoice number or month..."
                 />
+
             </Card>
 
-            {/* SIMULATED PAYMENT CHECKOUT MODAL */}
+
+            {/* =========================================================
+                PAYMENT CHECKOUT MODAL
+            ========================================================= */}
             {payingBill && (
+
                 <Modal
                     isOpen={!!payingBill}
                     onClose={() => setPayingBill(null)}
                     title={`Secure Pay - ₹${payingBill.amount.toLocaleString()}`}
-                    subtitle={`Invoice #${payingBill.billNumber || payingBill.invoiceNumber || 'INV-2026'} (${payingBill.monthYear || payingBill.month})`}
+                    subtitle={`Invoice #${
+                        payingBill.billNumber ||
+                        payingBill.invoiceNumber ||
+                        'INV-2026'
+                    } • ${
+                        payingBill.monthYear ||
+                        payingBill.month
+                    }`}
                 >
-                    <div className="space-y-4">
-                        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                            <span className="text-xs text-slate-500">Selected Payment Method</span>
-                            <div className="grid grid-cols-3 gap-2 mt-2">
-                                {(['upi', 'card', 'netbanking'] as const).map((m) => (
+
+                    <div className="space-y-5">
+
+                        {/* Payment summary */}
+                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 to-slate-800 p-5 text-white">
+
+                            <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand-500/20 blur-2xl" />
+
+                            <div className="relative flex items-center justify-between">
+
+                                <div>
+                                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Amount to Pay
+                                    </p>
+
+                                    <p className="mt-1 text-2xl font-black">
+                                        ₹
+                                        {payingBill.amount.toLocaleString()}
+                                    </p>
+                                </div>
+
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                                    <CreditCard className="h-5 w-5 text-brand-400" />
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* Payment method */}
+                        <div>
+
+                            <div className="mb-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                                    Choose payment method
+                                </span>
+
+                                <span className="text-[9px] font-semibold text-slate-400">
+                                    Secure checkout
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2">
+
+                                {(
+                                    ['upi', 'card', 'netbanking'] as const
+                                ).map((m) => (
+
                                     <button
                                         key={m}
                                         type="button"
-                                        onClick={() => setPaymentMethod(m)}
-                                        className={`p-3 rounded-xl border text-center font-bold text-xs capitalize transition-all ${paymentMethod === m
-                                            ? 'bg-brand-600 text-white border-brand-500 shadow-xs'
-                                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                                            }`}
+                                        onClick={() =>
+                                            setPaymentMethod(m)
+                                        }
+                                        className={`rounded-xl border p-3 text-center transition-all ${
+                                            paymentMethod === m
+                                                ? 'border-brand-500 bg-brand-500/10 text-brand-600 shadow-sm dark:text-brand-400'
+                                                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
+                                        }`}
                                     >
-                                        {m.toUpperCase()}
+
+                                        <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+
+                                            {m === 'upi' && (
+                                                <QrCode className="h-4 w-4" />
+                                            )}
+
+                                            {m === 'card' && (
+                                                <CreditCard className="h-4 w-4" />
+                                            )}
+
+                                            {m === 'netbanking' && (
+                                                <Landmark className="h-4 w-4" />
+                                            )}
+
+                                        </div>
+
+                                        <span className="text-[10px] font-black uppercase">
+                                            {m === 'netbanking'
+                                                ? 'Net Banking'
+                                                : m.toUpperCase()}
+                                        </span>
+
                                     </button>
+
                                 ))}
+
                             </div>
                         </div>
 
+
+                        {/* UPI */}
                         {paymentMethod === 'upi' && (
-                            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-2">
-                                <QrCode className="w-24 h-24 mx-auto text-brand-600 dark:text-brand-400" />
-                                <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Scan UPI QR or enter UPI ID</p>
-                                <p className="text-[10px] text-slate-400 font-mono">horizonheights@upi</p>
+
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center dark:border-slate-800 dark:bg-slate-800/40">
+
+                                <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-2xl bg-white shadow-sm dark:bg-slate-900">
+
+                                    <QrCode className="h-20 w-20 text-brand-600 dark:text-brand-400" />
+
+                                </div>
+
+                                <p className="mt-4 text-xs font-black text-slate-800 dark:text-white">
+                                    Scan to pay using UPI
+                                </p>
+
+                                <p className="mt-1 text-[10px] text-slate-400">
+                                    or use
+                                </p>
+
+                                <p className="mt-1 font-mono text-xs font-bold text-brand-600 dark:text-brand-400">
+                                    horizonheights@upi
+                                </p>
+
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+
+                        {/* Card / Net banking placeholder */}
+                        {paymentMethod !== 'upi' && (
+
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-800/40">
+
+                                <div className="flex items-center gap-3">
+
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10">
+                                        {paymentMethod === 'card' ? (
+                                            <CreditCard className="h-5 w-5 text-brand-500" />
+                                        ) : (
+                                            <Landmark className="h-5 w-5 text-brand-500" />
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-800 dark:text-white">
+                                            {paymentMethod === 'card'
+                                                ? 'Card Payment'
+                                                : 'Net Banking'}
+                                        </p>
+
+                                        <p className="mt-0.5 text-[10px] text-slate-400">
+                                            Continue with secure authorization
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        )}
+
+
+                        {/* Actions */}
+                        <div className="flex justify-end gap-3 border-t border-slate-100 pt-5 dark:border-slate-800">
+
                             <button
                                 type="button"
-                                onClick={() => setPayingBill(null)}
-                                className="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+                                onClick={() =>
+                                    setPayingBill(null)
+                                }
+                                className="rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                             >
                                 Cancel
                             </button>
+
                             <button
                                 type="button"
                                 onClick={handleProcessPayment}
                                 disabled={isProcessing}
-                                className="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md transition-all flex items-center gap-2"
+                                className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
                             >
+
                                 {isProcessing ? (
-                                    <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                ) : (
+
                                     <>
-                                        <ShieldCheck className="w-4 h-4" />
-                                        <span>Authorize ₹{payingBill.amount.toLocaleString()}</span>
+                                        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                        Processing...
                                     </>
+
+                                ) : (
+
+                                    <>
+                                        <ShieldCheck className="h-4 w-4" />
+                                        Authorize ₹
+                                        {payingBill.amount.toLocaleString()}
+                                    </>
+
                                 )}
+
                             </button>
+
                         </div>
+
                     </div>
+
                 </Modal>
             )}
 
-            {/* RECEIPT VIEW MODAL */}
+
+            {/* =========================================================
+                RECEIPT MODAL
+            ========================================================= */}
             {receiptBill && (
+
                 <Modal
                     isOpen={!!receiptBill}
                     onClose={() => setReceiptBill(null)}
                     title="Payment Receipt"
-                    subtitle={`Transaction Receipt #${receiptBill.transactionId || 'TXN-884920'}`}
+                    subtitle={`Transaction Receipt #${
+                        receiptBill.transactionId ||
+                        'TXN-884920'
+                    }`}
                 >
-                    <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-4">
-                        <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-4">
-                            <div>
-                                <h4 className="text-base font-extrabold text-slate-900 dark:text-white">Grand Horizon Heights</h4>
-                                <p className="text-[11px] text-slate-500">Cooperative Housing Society Ltd.</p>
+
+                    <div className="space-y-4">
+
+                        {/* Receipt header */}
+                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 to-slate-800 p-5 text-white">
+
+                            <div className="relative flex items-start justify-between gap-4">
+
+                                <div>
+
+                                    <div className="mb-2 flex items-center gap-2">
+                                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
+                                            <Building2 className="h-5 w-5 text-brand-400" />
+                                        </div>
+
+                                        <div>
+                                            <h4 className="text-sm font-black">
+                                                Grand Horizon Heights
+                                            </h4>
+
+                                            <p className="text-[9px] text-slate-400">
+                                                Cooperative Housing Society Ltd.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-300">
+                                    <CheckCircle2 className="h-3 w-3" />
+                                    Paid
+                                </span>
+
                             </div>
-                            <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase">
-                                PAID & VERIFIED
-                            </span>
+
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 text-xs">
-                            <div>
-                                <span className="text-slate-400">Flat Number:</span>
-                                <p className="font-bold text-slate-900 dark:text-white">{receiptBill.flatNumber}</p>
+
+                        {/* Receipt details */}
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-800/40">
+
+                            <div className="grid grid-cols-2 gap-x-5 gap-y-5">
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Flat Number
+                                    </span>
+
+                                    <p className="mt-1 text-xs font-black text-slate-900 dark:text-white">
+                                        {receiptBill.flatNumber}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Resident
+                                    </span>
+
+                                    <p className="mt-1 text-xs font-black text-slate-900 dark:text-white">
+                                        {receiptBill.residentName}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Paid Date
+                                    </span>
+
+                                    <p className="mt-1 text-xs font-black text-slate-900 dark:text-white">
+                                        {receiptBill.paidAt ||
+                                            '2026-09-01'}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                        Payment Mode
+                                    </span>
+
+                                    <p className="mt-1 text-xs font-black uppercase text-slate-900 dark:text-white">
+                                        {receiptBill.paymentMethod ||
+                                            'UPI'}
+                                    </p>
+                                </div>
+
                             </div>
-                            <div>
-                                <span className="text-slate-400">Resident Name:</span>
-                                <p className="font-bold text-slate-900 dark:text-white">{receiptBill.residentName}</p>
+
+
+                            {/* Amount */}
+                            <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-4 dark:border-slate-700">
+
+                                <div className="flex items-center gap-2">
+                                    <Receipt className="h-4 w-4 text-brand-500" />
+
+                                    <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                                        Total Paid
+                                    </span>
+                                </div>
+
+                                <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+                                    ₹
+                                    {receiptBill.amount.toLocaleString()}
+                                </span>
+
                             </div>
-                            <div>
-                                <span className="text-slate-400">Paid Date:</span>
-                                <p className="font-bold text-slate-900 dark:text-white">{receiptBill.paidAt || '2026-09-01'}</p>
-                            </div>
-                            <div>
-                                <span className="text-slate-400">Payment Mode:</span>
-                                <p className="font-bold text-slate-900 dark:text-white uppercase">{receiptBill.paymentMethod || 'UPI'}</p>
-                            </div>
+
                         </div>
 
-                        <div className="border-t border-slate-200 dark:border-slate-700 pt-3 flex justify-between items-center text-sm font-black">
-                            <span>Total Paid:</span>
-                            <span className="text-emerald-600 dark:text-emerald-400">₹{receiptBill.amount.toLocaleString()}</span>
+
+                        {/* Receipt footer */}
+                        <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800/40">
+
+                            <div className="flex items-center gap-2">
+                                <BadgeCheck className="h-4 w-4 text-emerald-500" />
+
+                                <span className="text-[10px] font-semibold text-slate-500">
+                                    Payment verified successfully
+                                </span>
+                            </div>
+
+                            <FileText className="h-4 w-4 text-slate-400" />
+
                         </div>
+
                     </div>
+
                 </Modal>
             )}
+
         </div>
     );
 };
