@@ -1,29 +1,30 @@
 {
-  "name": "frontend",
+  "name": "society-management-system",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3"
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.13.0",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.1.0",
-    "eslint": "^10.9.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.4",
-    "globals": "^17.11.0",
-    "vite": "^8.2.2"
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3"
   }
 }
